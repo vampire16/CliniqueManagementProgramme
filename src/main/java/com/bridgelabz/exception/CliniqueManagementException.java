@@ -1,9 +1,9 @@
 package com.bridgelabz.exception;
 
-public class Exception extends Throwable {
+public class CliniqueManagementException extends Throwable {
     public Exceptions type;
 
-    public Exception(Exceptions type) {
+    public CliniqueManagementException(Exceptions type) {
         this.type = type;
     }
 

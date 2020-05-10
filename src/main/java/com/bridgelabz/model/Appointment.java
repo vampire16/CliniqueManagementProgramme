@@ -1,11 +1,11 @@
-package com.bridgelabz.utility;
+package com.bridgelabz.model;
 
 import java.util.Date;
 import java.util.Objects;
 
 public class Appointment {
-    Integer did;
-    Date date;
+    private Integer did;
+    private Date date;
 
     public Appointment(int did, Date date) {
         this.did = did;
