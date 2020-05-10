@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="CliniqueManagementTestCases" tests="1" skipped="1" failures="0" errors="0" timestamp="2020-05-10T02:16:15" hostname="DESKTOP-7UGSU5P" time="8.498">
+  <properties/>
+  <testcase name="givenIdOfDoctorAndDate_WhenIdIsNotCorrect_ShouldThrowException" classname="CliniqueManagementTestCases" time="8.498">
+    <skipped/>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
