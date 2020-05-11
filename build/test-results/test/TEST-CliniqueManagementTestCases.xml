@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="CliniqueManagementTestCases" tests="11" skipped="0" failures="0" errors="0" timestamp="2020-05-11T02:59:03" hostname="DESKTOP-7UGSU5P" time="0.403">
+<testsuite name="CliniqueManagementTestCases" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-05-11T07:05:18" hostname="DESKTOP-7UGSU5P" time="0.111">
   <properties/>
-  <testcase name="givenIdOfDoctorAndDate_WhenIdIsNotCorrect_ShouldThrowException" classname="CliniqueManagementTestCases" time="0.235"/>
-  <testcase name="givenIdOfDoctorAndDate_WhenAppointmentsDone_ShouldReturnPopularDoctor" classname="CliniqueManagementTestCases" time="0.041"/>
-  <testcase name="givenDoctorName_WhenSearchDoctorByName_ShouldReturnDoctorInfo" classname="CliniqueManagementTestCases" time="0.005"/>
-  <testcase name="givenDoctorSpecialization_WhenSearchDoctorBySpecialization_ShouldReturnDoctorInfo" classname="CliniqueManagementTestCases" time="0.004"/>
-  <testcase name="givenPatientId_WhenSearchPatientById_ShouldReturnPatientInfo" classname="CliniqueManagementTestCases" time="0.014"/>
-  <testcase name="givenDoctorId_WhenSearchDoctorById_ShouldReturnDoctorInfo" classname="CliniqueManagementTestCases" time="0.004"/>
-  <testcase name="givenIdOfDoctorAndDate_WhenAppointmentIsNotAvailable_ShouldThrowException" classname="CliniqueManagementTestCases" time="0.011"/>
-  <testcase name="givenIdOfDoctorAndDate_WhenDateIsNotCorrect_ShouldThrowException" classname="CliniqueManagementTestCases" time="0.004"/>
-  <testcase name="givenIdOfDoctorAndDate_WhenAppointmentFixed_ShouldReturnDoctorInfo" classname="CliniqueManagementTestCases" time="0.061"/>
-  <testcase name="givenPatientName_WhenSearchPatientByName_ShouldReturnPatientInfo" classname="CliniqueManagementTestCases" time="0.007"/>
-  <testcase name="givenIdOfDoctorAndDate_WhenAppointmentsDone_ShouldReturnPopularSpecialization" classname="CliniqueManagementTestCases" time="0.014"/>
-  <system-out><![CDATA[Doctor id 440 has 2 appointments on Sun Jan 12 00:00:00 IST 2020
-Doctor id 100 has 3 appointments on Fri Jan 10 00:00:00 IST 2020
-]]></system-out>
+  <testcase name="givenIdOfDoctorAndDate_WhenAppointmentsDone_ShouldReturnPopularSpecialization" classname="CliniqueManagementTestCases" time="0.111"/>
+  <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
