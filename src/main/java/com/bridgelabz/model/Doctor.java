@@ -1,14 +1,17 @@
 package com.bridgelabz.model;
 
 public class Doctor {
+    //    PRIVATE VARIABLES
     private String name;
     private int id;
     private String specialization;
     private String availability;
 
+    //    DEFAULT CONSTRUCTOR
     public Doctor() {
     }
 
+    //    PARAMETERIZE CONSTRUCTOR
     public Doctor(String name, int id, String specialization, String availability) {
         this.name = name;
         this.id = id;
@@ -16,6 +19,7 @@ public class Doctor {
         this.availability = availability;
     }
 
+    //    GETTER AND SETTER METHODS
     public String getName() {
         return name;
     }

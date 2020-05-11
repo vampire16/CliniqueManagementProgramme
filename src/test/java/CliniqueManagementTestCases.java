@@ -3,7 +3,6 @@ import com.bridgelabz.model.Doctor;
 import com.bridgelabz.model.Patient;
 import com.bridgelabz.service.CliniqueManagement;
 import com.bridgelabz.service.CliniqueManagementFactory;
-import com.bridgelabz.service.CliniqueManagementService;
 import com.bridgelabz.utility.FileSystem;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,25 +30,25 @@ public class CliniqueManagementTestCases {
         fileSystem = new FileSystem();
     }
 
-//    @Test
-//    public void givenDoctorInfo_WhenAddedInFile_ShouldReturnFile() throws IOException {
-//        application.add(new Doctor("vaibhav", 100, "corona", "8AM"), doctorFilePath, Doctor.class);
-//        application.add(new Doctor("bharat", 440, "cancer", "11AM"), doctorFilePath, Doctor.class);
-//        application.add(new Doctor("babu", 123, "hanta", "2PM"), doctorFilePath, Doctor.class);
-//        ArrayList<Doctor> doctorsList = mapper.readValue(new File(doctorFilePath), new TypeReference<ArrayList<Doctor>>() {
-//        });
-//        Assert.assertEquals("bharat", doctorsList.get(1).getName());
-//    }
-//
-//    @Test
-//    public void givenPatientInfo_WhenAddedInFile_ShouldReturnFile() throws IOException {
-//        application.add(new Patient("sachin", 1, "3294294933", 23), patientFilePath, Patient.class);
-//        application.add(new Patient("nitin", 2, "2376468234", 19), patientFilePath, Patient.class);
-//        application.add(new Patient("bhiku", 3, "23634823", 29), patientFilePath, Patient.class);
-//        ArrayList<Patient> patientsList = mapper.readValue(new File(patientFilePath), new TypeReference<ArrayList<Patient>>() {
-//        });
-//        Assert.assertEquals(29, patientsList.get(2).getAge());
-//    }
+    @Test
+    public void givenDoctorInfo_WhenAddedInFile_ShouldReturnFile() throws IOException {
+        application.add(new Doctor("vaibhav", 100, "COVID-19", "8AM"), doctorFilePath, Doctor.class);
+        application.add(new Doctor("bharat", 440, "cancer", "11AM"), doctorFilePath, Doctor.class);
+        application.add(new Doctor("babu", 123, "hanta", "2PM"), doctorFilePath, Doctor.class);
+        ArrayList<Doctor> doctorsList = mapper.readValue(new File(doctorFilePath), new TypeReference<ArrayList<Doctor>>() {
+        });
+        Assert.assertEquals("bharat", doctorsList.get(1).getName());
+    }
+
+    @Test
+    public void givenPatientInfo_WhenAddedInFile_ShouldReturnFile() throws IOException {
+        application.add(new Patient("sachin", 1, "3294294933", 23), patientFilePath, Patient.class);
+        application.add(new Patient("nitin", 2, "2376468234", 19), patientFilePath, Patient.class);
+        application.add(new Patient("bhiku", 3, "23634823", 29), patientFilePath, Patient.class);
+        ArrayList<Patient> patientsList = mapper.readValue(new File(patientFilePath), new TypeReference<ArrayList<Patient>>() {
+        });
+        Assert.assertEquals(29, patientsList.get(2).getAge());
+    }
 
     @Test
     public void givenDoctorId_WhenSearchDoctorById_ShouldReturnDoctorInfo() throws IOException {
@@ -83,20 +82,20 @@ public class CliniqueManagementTestCases {
 
     @Test
     public void givenIdOfDoctorAndDate_WhenAppointmentFixed_ShouldReturnDoctorInfo() throws ParseException, IOException, CliniqueManagementException {
-        int id1 = 100,id2 = 440;
+        int id1 = 100, id2 = 440;
         String dateInString = "10-Jan-2020";
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
         Date date = formatter.parse(dateInString);
-        application.makeAppointment(id1, doctorFilePath, date);
-        application.makeAppointment(id1, doctorFilePath, date);
-        application.makeAppointment(id1, doctorFilePath, date);
+        application.makeAppointment(id1, doctorFilePath, date, 1);
+        application.makeAppointment(id1, doctorFilePath, date, 2);
+        application.makeAppointment(id1, doctorFilePath, date, 3);
         String dateInString1 = "12-Jan-2020";
         SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
         Date date1 = formatter1.parse(dateInString1);
-        application.makeAppointment(id2, doctorFilePath, date1);
-        application.makeAppointment(id2, doctorFilePath, date1);
-        long l = application.printAndCountAppointments();
-//        Assert.assertEquals(2, l);
+        application.makeAppointment(id2, doctorFilePath, date1, 1);
+        application.makeAppointment(id2, doctorFilePath, date1, 2);
+        long l = application.printAndCountAppointmentsWithDoctors();
+        Assert.assertEquals(2, l);
     }
 
     @Test
@@ -106,12 +105,12 @@ public class CliniqueManagementTestCases {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
         Date date = formatter.parse(dateInString);
         try {
-            application.makeAppointment(id, doctorFilePath, date);
-            application.makeAppointment(id, doctorFilePath, date);
-            application.makeAppointment(id, doctorFilePath, date);
-            application.makeAppointment(id, doctorFilePath, date);
-            application.makeAppointment(id, doctorFilePath, date);
-            application.makeAppointment(id, doctorFilePath, date);
+            application.makeAppointment(id, doctorFilePath, date, 1);
+            application.makeAppointment(id, doctorFilePath, date, 2);
+            application.makeAppointment(id, doctorFilePath, date, 1);
+            application.makeAppointment(id, doctorFilePath, date, 2);
+            application.makeAppointment(id, doctorFilePath, date, 3);
+            application.makeAppointment(id, doctorFilePath, date, 3);
         } catch (CliniqueManagementException e) {
             Assert.assertEquals(e.type, CliniqueManagementException.Exceptions.APPOINTMENTS_FULL);
         }
@@ -122,7 +121,7 @@ public class CliniqueManagementTestCases {
         int id = 100;
         Date date = null;
         try {
-            application.makeAppointment(id, doctorFilePath, date);
+            application.makeAppointment(id, doctorFilePath, date, 1);
         } catch (CliniqueManagementException e) {
             Assert.assertEquals(e.type, CliniqueManagementException.Exceptions.DATE_FORMAT_INCORRECT);
         }
@@ -135,44 +134,26 @@ public class CliniqueManagementTestCases {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
         Date date = formatter.parse(dateInString);
         try {
-            application.makeAppointment(id, doctorFilePath, date);
+            application.makeAppointment(id, doctorFilePath, date, 1);
         } catch (CliniqueManagementException e) {
             Assert.assertEquals(e.type, CliniqueManagementException.Exceptions.DOCTOR_UNAVAILABLE);
         }
     }
 
     @Test
-    public void givenIdOfDoctorAndDate_WhenAppointmentsDone_ShouldReturnPopularDoctor() throws ParseException, IOException, CliniqueManagementException {
-        int id1 = 100, id2 = 440;
-        String dateInString = "10-Jan-2020";
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-        Date date = formatter.parse(dateInString);
-        application.makeAppointment(id2, doctorFilePath, date);
-        application.makeAppointment(id2, doctorFilePath, date);
-        application.makeAppointment(id2, doctorFilePath, date);
-        String dateInString1 = "12-Jan-2020";
-        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
-        Date date1 = formatter1.parse(dateInString1);
-        application.makeAppointment(id1, doctorFilePath, date1);
-        application.makeAppointment(id1, doctorFilePath, date1);
-        int popularDoctor = application.getPopularDoctor();
-        Assert.assertEquals(id2,popularDoctor);
+    public void givenIdOfDoctorAndDate_WhenAppointmentsDone_ShouldReturnPopularDoctor() throws IOException {
+        Doctor popularDoctor = application.getPopularDoctor();
+        Assert.assertEquals(100, popularDoctor.getId());
     }
 
     @Test
-    public void givenIdOfDoctorAndDate_WhenAppointmentsDone_ShouldReturnPopularSpecialization() throws ParseException, IOException, CliniqueManagementException {
-        int id1 = 100, id2 = 440;
-        String dateInString = "10-Jan-2020";
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-        Date date = formatter.parse(dateInString);
-        application.makeAppointment(id1, doctorFilePath, date);
-        application.makeAppointment(id1, doctorFilePath, date);
-        application.makeAppointment(id1, doctorFilePath, date);
-        String dateInString1 = "12-Jan-2020";
-        SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
-        Date date1 = formatter1.parse(dateInString1);
-        application.makeAppointment(id2, doctorFilePath, date1);
+    public void givenIdOfDoctorAndDate_WhenAppointmentsDone_ShouldReturnPopularSpecialization() throws IOException {
         Doctor popularDoctorBySpecialization = application.getPopularSpecialization();
-        Assert.assertEquals("corona",popularDoctorBySpecialization.getSpecialization());
+        Assert.assertEquals("COVID-19", popularDoctorBySpecialization.getSpecialization());
+    }
+
+    @Test
+    public void givenIdOfDoctorAndDate_WhenAppointmentFixed_ShouldReturnDoctorInf() throws IOException {
+        application.patientReport(3);
     }
 }

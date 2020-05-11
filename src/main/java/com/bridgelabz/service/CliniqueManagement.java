@@ -8,23 +8,37 @@ import java.io.IOException;
 import java.util.Date;
 
 public interface CliniqueManagement {
-    public abstract <E> void add(E object, String path, Class<E> classObject) throws IOException;
 
-    public abstract Doctor searchDoctorById(int id, String path) throws IOException;
+    //    TO ADD OBJECTS IN JSON FILE
+    <E> void add(E object, String path, Class<E> classObject) throws IOException;
 
-    public abstract Patient searchPatientById(int id, String path) throws IOException;
+    //    TO SEARCH DOCTOR BY ID
+    Doctor searchDoctorById(int id, String path) throws IOException;
 
-    public abstract Doctor searchDoctorByName(String name, String path) throws IOException;
+    //    TO SEARCH PATIENT BY ID
+    Patient searchPatientById(int id, String path) throws IOException;
 
-    public abstract Patient searchPatientByName(String name, String path) throws IOException;
+    //    TO SEARCH DOCTOR BY NAME
+    Doctor searchDoctorByName(String name, String path) throws IOException;
 
-    public abstract Doctor searchDoctorBySpecialization(String specialization, String path) throws IOException;
+    //    TO SEARCH PATIENT BY NAME
+    Patient searchPatientByName(String name, String path) throws IOException;
 
-    public abstract void makeAppointment(int did, String path, Date date) throws CliniqueManagementException, IOException;
+    //    TO SEARCH DOCTOR BY SPECIALIZATION
+    Doctor searchDoctorBySpecialization(String specialization, String path) throws IOException;
 
-    long printAndCountAppointments();
+    //    TO MAKE APPOINTMENT WITH DOCTOR
+    void makeAppointment(int did, String path, Date date, int pid) throws CliniqueManagementException, IOException;
 
-    int getPopularDoctor();
+    //    TO GET PATIENT REPORT
+    void patientReport(int pid) throws IOException;
 
+    //    TO PRINT AND TO GET COUNT OF APPOINTMENTS
+    long printAndCountAppointmentsWithDoctors();
+
+    //    TO GET POPULAR DOCTOR
+    Doctor getPopularDoctor() throws IOException;
+
+    //    TO GET POPULAR SPECIALIZATION
     Doctor getPopularSpecialization() throws IOException;
 }

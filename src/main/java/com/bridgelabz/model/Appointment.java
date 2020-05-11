@@ -4,14 +4,17 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Appointment {
+    //    PRIVATE VARIABLES
     private int did;
     private Date date;
 
+    //    PARAMETERIZE CONSTRUCTOR
     public Appointment(int did, Date date) {
         this.did = did;
         this.date = date;
     }
 
+    //    GETTER AND SETTER METHODS
     public int getDid() {
         return did;
     }

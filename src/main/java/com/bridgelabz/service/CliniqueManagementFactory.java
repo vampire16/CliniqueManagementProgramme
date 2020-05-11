@@ -2,7 +2,8 @@ package com.bridgelabz.service;
 
 public class CliniqueManagementFactory {
 
-    public static CliniqueManagement createServiceObject(){
+    //    TO GET SERVICE CLASS OBJECT
+    public static CliniqueManagement createServiceObject() {
         return new CliniqueManagementService();
     }
 }

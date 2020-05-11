@@ -4,17 +4,19 @@ import com.bridgelabz.exception.CliniqueManagementException;
 import com.bridgelabz.model.Appointment;
 import com.bridgelabz.model.Doctor;
 import com.bridgelabz.model.Patient;
+import com.bridgelabz.model.Report;
 import com.bridgelabz.utility.FileSystem;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CliniqueManagementService implements CliniqueManagement {
+
+    //    OBJECTS
     FileSystem fileSystem = new FileSystem();
     HashMap<Appointment, Integer> appoint = new HashMap<>();
+
+    //    VARIABLE
     Integer appointment;
 
     @Override
@@ -54,21 +56,28 @@ public class CliniqueManagementService implements CliniqueManagement {
     }
 
     @Override
-    public void makeAppointment(int did, String path, Date date) throws CliniqueManagementException, IOException {
-        boolean doctor = isDoctorAvailableById(did, path);
-        if (doctor == true) {
+    public void makeAppointment(int did, String path, Date date, int pid) throws CliniqueManagementException, IOException {
+        boolean isDoctorAvailable = isDoctorAvailableById(did, path);
+        if (isDoctorAvailable == true) {
+            ArrayList<Doctor> doctors = fileSystem.readData("src/test/resources/DoctorsFile.json", Doctor.class);
+            Doctor doctor = doctors.stream().filter(d -> d.getId() == did).findFirst().get();
             if (date != null) {
-                Appointment newApp = new Appointment(did, date);
-                if (appoint.containsKey(newApp)) {
-                    appointment = appoint.get(newApp);
+                String s = date.toString();
+                Appointment newAppoint = new Appointment(did, date);
+                if (appoint.containsKey(newAppoint)) {
+                    appointment = appoint.get(newAppoint);
                     appointment++;
                     if (appointment <= 5) {
-                        appoint.put(newApp, appointment);
+                        appoint.put(newAppoint, appointment);
+                        Report report = new Report(did, pid, doctor.getSpecialization(), s);
+                        this.add(report, "src/test/resources/Appointments.json", Report.class);
                     } else {
                         throw new CliniqueManagementException(CliniqueManagementException.Exceptions.APPOINTMENTS_FULL);
                     }
                 } else {
-                    appoint.put(newApp, 1);
+                    appoint.put(newAppoint, 1);
+                    Report report = new Report(did, pid, doctor.getSpecialization(), s);
+                    this.add(report, "src/test/resources/Appointments.json", Report.class);
                 }
             } else {
                 throw new CliniqueManagementException(CliniqueManagementException.Exceptions.DATE_FORMAT_INCORRECT);
@@ -79,27 +88,65 @@ public class CliniqueManagementService implements CliniqueManagement {
     }
 
     @Override
-    public long printAndCountAppointments() {
+    public void patientReport(int pid) throws IOException {
+        ArrayList<Report> reportList = fileSystem.readData("src/test/resources/Appointments.json", Report.class);
+        Report report = reportList.stream().filter(e -> e.getPid() == pid).findFirst().get();
+        ArrayList<Doctor> doctorsList = fileSystem.readData("src/test/resources/DoctorsFile.json", Doctor.class);
+        Doctor doctor = doctorsList.stream().filter(d -> d.getId() == report.getDid()).findFirst().get();
+        ArrayList<Patient> patientsList = fileSystem.readData("src/test/resources/PatientFile.json", Patient.class);
+        Patient patient = patientsList.stream().filter(p -> p.getId() == report.getPid()).findFirst().get();
+        report(doctor, patient, report);
+    }
+
+    //    TO PRINT REPORT
+    public void report(Doctor doctor, Patient patient, Report report) {
+        System.out.println("Date : " + report.getDate() +
+                "\nDoctor name : " + doctor.getName() +
+                "\nDoctor specialization : " + doctor.getSpecialization() +
+                "\nPatient name : " + patient.getName() +
+                "\nPatient age : " + patient.getAge() +
+                "\nSpecial care : Home quarantine for 14 days \n Drugs : AT-100 and OYA1");
+    }
+
+    @Override
+    public long printAndCountAppointmentsWithDoctors() {
         appoint.entrySet().stream().forEach(entry -> System.out.println("Doctor id " + entry.getKey().getDid() +
                 " has " + entry.getValue() + " appointments on " + entry.getKey().getDate()));
         return appoint.entrySet().stream().count();
     }
 
     @Override
-    public int getPopularDoctor() {
+    public Doctor getPopularDoctor() throws IOException {
+        ArrayList<Report> reportList = fileSystem.readData("src/test/resources/Appointments.json", Report.class);
         ArrayList list = new ArrayList();
-        appoint.entrySet().stream().forEach(entry -> list.add(entry.getValue()));
-        int noOfPatients = list.stream().mapToInt(v -> (int) v).max().getAsInt();
-        return appoint.entrySet().stream().filter(a -> a.getValue() == noOfPatients).findFirst().get().getKey().getDid();
+        reportList.stream().forEach(entry -> list.add(entry.getDid()));
+        Object o = this.mostCommon(list);
+        ArrayList<Doctor> doctors = fileSystem.readData("src/test/resources/DoctorsFile.json", Doctor.class);
+        Doctor doctor = doctors.stream().filter(d -> d.getId() == (Integer) o).findFirst().get();
+        return doctor;
     }
 
     @Override
     public Doctor getPopularSpecialization() throws IOException {
+        ArrayList<Report> reportList = fileSystem.readData("src/test/resources/Appointments.json", Report.class);
         ArrayList list = new ArrayList();
-        appoint.entrySet().stream().forEach(entry -> list.add(entry.getValue()));
-        int noOfPatients = list.stream().mapToInt(v -> (int) v).max().getAsInt();
-        int did = appoint.entrySet().stream().filter(a -> a.getValue() == noOfPatients).findFirst().get().getKey().getDid();
+        reportList.stream().forEach(entry -> list.add(entry.getSpecialization()));
+        Object o = this.mostCommon(list);
         ArrayList<Doctor> doctors = fileSystem.readData("src/test/resources/DoctorsFile.json", Doctor.class);
-       return doctors.stream().filter(doc -> doc.getId() == did).findFirst().get();
+        Doctor doctor = doctors.stream().filter(d -> d.getSpecialization().equals(o)).findFirst().get();
+        return doctor;
     }
+
+    //    TO GET MOST COMMON OBJECT FROM LIST
+    public <T> T mostCommon(List<T> list) {
+        Map<T, Integer> map = new HashMap<>();
+        list.stream().forEach(e -> map.put(e, map.get(e) == null ? 1 : map.get(e) + 1));
+        Map.Entry<T, Integer> max = null;
+        for (Map.Entry<T, Integer> e : map.entrySet()) {
+            if (max == null || e.getValue() > max.getValue())
+                max = e;
+        }
+        return max.getKey();
+    }
+
 }
