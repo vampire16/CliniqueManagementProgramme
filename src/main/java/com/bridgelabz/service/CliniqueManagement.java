@@ -7,10 +7,8 @@ import com.bridgelabz.model.Patient;
 import java.io.IOException;
 import java.util.Date;
 
-public abstract class CliniqueManagement {
-    public abstract void addDoctor(Doctor doctor, String path) throws IOException;
-
-    public abstract void addPatient(Patient patient, String path) throws IOException;
+public interface CliniqueManagement {
+    public abstract <E> void add(E object, String path, Class<E> classObject) throws IOException;
 
     public abstract Doctor searchDoctorById(int id, String path) throws IOException;
 
@@ -24,4 +22,9 @@ public abstract class CliniqueManagement {
 
     public abstract void makeAppointment(int did, String path, Date date) throws CliniqueManagementException, IOException;
 
+    long printAndCountAppointments();
+
+    int getPopularDoctor();
+
+    Doctor getPopularSpecialization() throws IOException;
 }
