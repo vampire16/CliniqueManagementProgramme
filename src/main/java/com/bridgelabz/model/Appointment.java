@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Appointment {
-    private Integer did;
+    private int did;
     private Date date;
 
     public Appointment(int did, Date date) {
